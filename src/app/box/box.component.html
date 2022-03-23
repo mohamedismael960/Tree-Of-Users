@@ -1,4 +1,9 @@
 <div class="myBox">
-    Name : {{user.name}}
-    code: {{user.code}}
+    <div class="card">
+        <img class="card-img-top" [src]="user.imagePath" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-text" style="margin: 10px;text-align: left;">Name : <span style="font-weight: 800;">{{user.name}}</span> </h5>
+          <p class="card-text" style="margin: 10px;text-align: left;">Code : <span style="font-weight: 800;">{{user.code}}</span> </p>
+        </div>
+      </div>
 </div>

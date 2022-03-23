@@ -1,66 +1,46 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-
+import {
+  animate,
+  style,
+  transition,
+  trigger,
+  state
+} from "@angular/animations";
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  animations: [
+    trigger("myTrigger", [
+      state(
+        "fadeInFlash",
+        style({
+          opacity: "1"
+        })
+      ),
+      transition("void => *", [
+        style({ opacity: "0", transform: "translateY(20px)" }),
+        animate("500ms")
+      ])
+    ])
+  ]
 })
 export class AppComponent implements OnInit {
   nodes: any = [];
   data:any= [];
-  users=[
-    {
-    "name": "ahmed",
-    "code": "0001",
-    "imagePath": "{replaceWithImagePath}"
-    },
-    {
-    "name": "mohamed",
-    "code": "0001.0003.0004.0002",
-    "imagePath": "{replaceWithImagePath}"
-    },
-    {
-    "name": "ali",
-    "code": "0001.0003",
-    "imagePath": "{replaceWithImagePath}"
-    },
-    {
-    "name": "ibrahim",
-    "code": "0001.0003.0004",
-    "imagePath": "{replaceWithImagePath}"
-    },
-    {
-    "name": "mahmoud",
-    "code": "0001.0010.0005",
-    "imagePath": "{replaceWithImagePath}"
-    },{
-    "name": "samy",
-    "code": "0001.0010.0006",
-    "imagePath": "{replaceWithImagePath}"
-    },{
-    "name": "hany",
-    "code": "0001.0003.0004.0007",
-    "imagePath": "{replaceWithImagePath}"
-    },{
-    "name": "samir",
-    "code": "0001.0010.0005.0008",
-    "imagePath": "{replaceWithImagePath}"
-    },{
-    "name": "khalid",
-    "code": "0001.0010.0006.0009",
-    "imagePath": "{replaceWithImagePath}"
-    },{
-    "name": "abdullah",
-    "code": "0001.0010",
-    "imagePath": "{replaceWithImagePath}"
-    }
-    ]
-  final_nodes:any;
+  users:any = [];
+  final_nodes:any = [];
 
-  constructor() { }
+  constructor(private http:HttpClient) { }
 
   ngOnInit(): void {
+    this.http.get('../assets/users.json').subscribe((data:any)=>{
+      this.users = data;
+      this.makeStructrue();
+    })
+  }
+  makeStructrue(){
     this.nodes[this.users[0].code]={ children : []}
     this.final_nodes = {
       code: this.users[0].code,
@@ -78,9 +58,12 @@ export class AppComponent implements OnInit {
           !this.nodes[codes[i-1]].children.includes(codes[i]) ? this.nodes[codes[i-1]].children.push(codes[i]) : null
         }
       }
-      this.getChildren(this.final_nodes,this.nodes[this.final_nodes.code].children );
       this.final_nodes = [this.final_nodes];
-    console.log(this.final_nodes);
+      console.log(this.final_nodes);
+      
+    setTimeout(() => {
+       this.getChildren(this.final_nodes[0],this.nodes[this.final_nodes[0].code].children );
+    }, 2000);
   }
   getChildren(node: any, children: []){
     for (let index = 0; index < children.length; index++) {
@@ -94,7 +77,7 @@ export class AppComponent implements OnInit {
       if(this.nodes[children[index]]) {
         setTimeout(() => {
           this.getChildren(node.children[index],this.nodes[children[index]].children )
-        }, 3000);
+        }, 2000);
       }
     }
   }

@@ -2,7 +2,7 @@
     <ng-container [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{node : final_nodes}"></ng-container> 
 
     <ng-template #template let-node="node">
-        <div style="display: inline-block;" *ngFor="let user of node;">
+        <div style="display: inline-block;" *ngFor="let user of node;"  [@myTrigger]="'fadeInFlash'">
             <div class="mainFlex">
                 <app-box [user]="user"></app-box>
             </div>
